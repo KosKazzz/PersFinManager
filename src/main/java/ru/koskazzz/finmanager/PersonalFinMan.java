@@ -11,9 +11,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.stream.Collectors;
-
-import static ru.koskazzz.parser.MultiParser.ClientStringToJson;
 
 public class PersonalFinMan {
     HashMap<String, String> purchasesCategory;
@@ -44,7 +41,8 @@ public class PersonalFinMan {
             }
         }
         String maxCat = sumByCat.entrySet().stream()
-                .max((value1, value2) -> (value1.getValue() > value2.getValue() ? 1 : -1)).get()
+                .max((value1, value2) -> (value1.getValue() > value2.getValue() ? 1 : -1))
+                .get()
                 .getKey();
         double maxSum = sumByCat.get(maxCat);
 
