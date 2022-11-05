@@ -14,12 +14,11 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 
-
 public class PersonalFinMan {
     HashMap<String, String> purchasesCategory;
     private List<String> purchaseList = new ArrayList<>();
 
-    //To Do : сохранять состояние листа в файл, а при запуске сервера вынимать значения от туда
+ 
     public PersonalFinMan() {
         File categoriesFile = new File(".\\categories.tsv");
         this.purchasesCategory = ParseTsvFile(categoriesFile);
