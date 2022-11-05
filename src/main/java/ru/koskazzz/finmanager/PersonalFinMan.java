@@ -7,8 +7,10 @@ import ru.koskazzz.parser.MultiParser;
 
 import java.io.File;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 
@@ -16,14 +18,21 @@ public class PersonalFinMan {
     HashMap<String, String> purchasesCategory;
     private List<String> purchaseList = new ArrayList<>();
 
-    //To Do : сохранять состояние листа в файл, а при запуске сервера вынимать значения от туда
+ 
     public PersonalFinMan() {
         File categoriesFile = new File(".\\categories.tsv");
         this.purchasesCategory = ParseTsvFile(categoriesFile);
     }
 
+    public PersonalFinMan(List<String> purchaseListFromFile) {
+        File categoriesFile = new File(".\\categories.tsv");
+        this.purchasesCategory = ParseTsvFile(categoriesFile);
+        this.purchaseList = purchaseListFromFile;
+    }
+
     public void addPurchaseList(String pur) {
         purchaseList.add(pur);
+        SaveToFile(pur);
     }
 
     public JSONObject maxCategory() {
@@ -110,5 +119,40 @@ public class PersonalFinMan {
         return purchasesCategory.getOrDefault(fieldOfPurchase(jsonString, "title"), "другое");
     }
 
+    public static PersonalFinMan LoadFromFile() {
+        PersonalFinMan pfm = null;
+        File file = new File(".\\data.bin");
+        List<String> listFromFile = new ArrayList<>();
+        StringBuilder stringBuilderFromFile = new StringBuilder();
+        if (file.canRead()) {
+            try (FileReader reader = new FileReader(file)) {
+                int c;
+                while ((c = reader.read()) != -1){
+                    stringBuilderFromFile.append((char) c);
+                }
+                String[] strings = stringBuilderFromFile.toString().split("\n");
+                listFromFile.addAll(Arrays.asList(strings));
+                pfm = new PersonalFinMan(listFromFile);
+            } catch (IOException ex) {
+                ex.printStackTrace();
+            }
+        } else {
+            pfm = new PersonalFinMan();
+        }
+        return pfm;
+    }
+
+    public void SaveToFile(String pur) {
+        File file = new File(".\\data.bin");
+        try (FileWriter writer = new FileWriter(file, true)) {
+            writer.write(pur);
+            writer.append("\n");
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        }
+    }
 
 }
+
+
+
