@@ -21,7 +21,7 @@ public class FinServer {
                     PrintWriter out = new PrintWriter(clientSocket.getOutputStream(), true);
                     String fromClient = in.readLine();
                     pfm.addPurchaseList(fromClient);
-                    JSONObject toClient = pfm.maxCategory();
+                    JSONObject toClient = pfm.maxCategory(pfm.getPurchaseList());
                     //test
                     //System.out.println("String added : "+fromClient);
                     out.write(toClient.toJSONString());

@@ -12,7 +12,7 @@ public class MultiParser {
     public static JSONObject ClientStringToJson(String msg) {
         JSONObject clientJson = new JSONObject();
         Calendar calendar = new GregorianCalendar();
-        calendar.roll(Calendar.MONTH, 1);// разобраться с формированием даты
+        calendar.roll(Calendar.MONTH, 1);
         String date = calendar.get(Calendar.YEAR) + "." + calendar.get(Calendar.MONTH) + "." + calendar.get(Calendar.DAY_OF_MONTH);
         String[] splitMsg = msg.split(" ");
         clientJson.put("title", splitMsg[0]);

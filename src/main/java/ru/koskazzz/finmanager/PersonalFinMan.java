@@ -8,18 +8,13 @@ import ru.koskazzz.parser.MultiParser;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.stream.Collectors;
+import java.util.*;
 
-import static ru.koskazzz.parser.MultiParser.ClientStringToJson;
 
 public class PersonalFinMan {
     HashMap<String, String> purchasesCategory;
     private List<String> purchaseList = new ArrayList<>();
 
-    //To Do : сохранять состояние листа в файл, а при запуске сервера вынимать значения от туда
     public PersonalFinMan() {
         File categoriesFile = new File(".\\categories.tsv");
         this.purchasesCategory = ParseTsvFile(categoriesFile);
@@ -28,13 +23,16 @@ public class PersonalFinMan {
     public void addPurchaseList(String pur) {
         purchaseList.add(pur);
     }
+    public List<String> getPurchaseList(){
+        return purchaseList;
+    }
 
-    public JSONObject maxCategory() {
+    public JSONObject maxCategory(List<String> purchases) {
 
         HashMap<String, Double> sumByCat = new HashMap<>();
         String cat;
         double sum;
-        for (String s : purchaseList) {
+        for (String s : purchases) {
             cat = catOfPurchase(s);
             sum = Double.parseDouble(fieldOfPurchase(s, "sum"));
             if (sumByCat.containsKey(cat)) {
@@ -49,6 +47,28 @@ public class PersonalFinMan {
         double maxSum = sumByCat.get(maxCat);
 
         return MultiParser.MaxCatStringToJson(maxCat, maxSum, "maxCategory");
+    }
+
+    public List<String> SortByDate(int period) {
+
+        List<String> filteredPur = new ArrayList<>();
+        Calendar calendar = new GregorianCalendar();
+        calendar.roll(Calendar.MONTH, 1);
+        String year = "" + calendar.get(Calendar.YEAR);
+        String month = ""+ calendar.get(Calendar.MONTH);
+        String day = ""+ calendar.get(Calendar.DAY_OF_MONTH);
+        for (String s : purchaseList) {
+            String date = fieldOfPurchase(s, "date");
+            String[] splitDate = date.split("\\.");
+            if (period == 0 && splitDate[0].equals(year)) {
+                filteredPur.add(s);
+            }else if (period == 1 && splitDate[1].equals(month)) {
+                filteredPur.add(s);
+            } else if (period == 2 && splitDate[2].equals(day)) {
+                filteredPur.add(s);
+            }
+        }
+        return filteredPur;
     }
 
 
