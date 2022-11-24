@@ -20,7 +20,10 @@ public class PersonalFinManTest {
         personalFinMan.addPurchaseList("{\"date\":\"2022.10.30\",\"sum\":\"1700\",\"title\":\"булка\"}");
         personalFinMan.addPurchaseList("{\"date\":\"2022.10.30\",\"sum\":\"200\",\"title\":\"булка\"}");
         personalFinMan.addPurchaseList("{\"date\":\"2022.10.30\",\"sum\":\"100\",\"title\":\"булка\"}");
-        Assertions.assertEquals(expectedJsonObject, personalFinMan.maxCategory(personalFinMan.getPurchaseList()));
+        String expected = expectedJsonObject.toString();
+        String actual = personalFinMan.maxCategory(personalFinMan.getPurchaseList()).toString();
+        //Assertions.assertEquals(expected,actual);
+        Assertions.assertEquals(personalFinMan.fieldOfPurchase(expected,"sum"),personalFinMan.fieldOfPurchase(actual,"sum"));
     }
 
     @Test
