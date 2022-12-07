@@ -1,5 +1,6 @@
 package ru.koskazzz.finmanager;
 
+import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
@@ -50,7 +51,7 @@ public class PersonalFinMan {
         double sum;
         for (String s : purchases) {
             cat = catOfPurchase(s);
-            sum = Double.parseDouble(fieldOfPurchase(s, "sum"));
+            sum = Double.parseDouble(fieldOfPurchase(s, "sum"));//if it comes string digit
             if (sumByCat.containsKey(cat)) {
                 sumByCat.put(cat, sumByCat.get(cat) + sum);
             } else {
@@ -138,7 +139,12 @@ public class PersonalFinMan {
         String result = "";
         try {
             JSONObject jsonObject = (JSONObject) parser.parse(jsonString);
-            result = (String) jsonObject.get(fieldName);
+            if (jsonObject.get(fieldName) == null) {
+                JSONObject jsonObjectInner = (JSONObject) jsonObject.get("maxCategory");
+                result = jsonObjectInner.get(fieldName).toString();
+            } else {
+                result = jsonObject.get(fieldName).toString();
+            }
         } catch (ParseException ex) {
             ex.printStackTrace();
         }
